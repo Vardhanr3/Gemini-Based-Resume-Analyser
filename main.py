@@ -1,17 +1,16 @@
 from utils.parser import parse_resume
 from utils.gemini_client import analyze_resume
-from utils.report import save_pdf
 
 def main():
-    resume_path = input("Enter path to resume (.pdf/.docx): ").strip()
+    resume_path = input("Enter the resume file path (PDF or DOCX): ")
     text = parse_resume(resume_path)
-    print("✅ Resume extracted.")
+    
+    print("\nExtracted Text:\n")
+    print(text[:1000])  # Show a preview of extracted text
 
+    print("\nAnalyzing Resume with Gemini...\n")
     report = analyze_resume(text)
-    print("✅ Gemini AI analysis complete.")
-
-    save_pdf(report)
-    print("📄 Report saved as output/report.pdf")
+    print(report)
 
 if __name__ == "__main__":
     main()

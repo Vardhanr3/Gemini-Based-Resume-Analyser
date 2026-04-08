@@ -1,21 +1,18 @@
-import docx
+import os
+import docx2txt
 import fitz  # PyMuPDF
 
-def extract_text_from_docx(path):
-    doc = docx.Document(path)
-    return '\n'.join([para.text for para in doc.paragraphs])
+def parse_resume(resume_path):
+    ext = os.path.splitext(resume_path)[1].lower()
 
-def extract_text_from_pdf(path):
-    doc = fitz.open(path)
-    text = ""
-    for page in doc:
-        text += page.get_text()
-    return text
-
-def parse_resume(file_path):
-    if file_path.endswith('.docx'):
-        return extract_text_from_docx(file_path)
-    elif file_path.endswith('.pdf'):
-        return extract_text_from_pdf(file_path)
+    if ext == ".docx":
+        text = docx2txt.process(resume_path)
+    elif ext == ".pdf":
+        with fitz.open(resume_path) as doc:
+            text = ""
+            for page in doc:
+                text += page.get_text()
     else:
-        raise ValueError("Unsupported file format.")
+        raise ValueError("Unsupported file format. Please use a .pdf or .docx file.")
+    
+    return text
